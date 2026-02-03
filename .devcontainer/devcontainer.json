@@ -1,0 +1,44 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {}
+}import type { UserConfig } from 'vite'
+import path from 'node:path'
+// prettier-ignore
+const config: UserConfig = {
+// ---cut-before---
+experimental: {
+  renderBuiltUrl(filename, { hostId, hostType, type }) {
+    if (type === 'public') {
+      return 'https://www.domain.com/' + filename
+    } else if (path.extname(hostId) === '.js') {
+      return {
+        runtime: `window.__assetsPath(${JSON.stringify(filename)})`
+      }
+    } else {
+      return 'https://cdn.domain.com/assets/' + filename
+    }
+  },
+},
+// ---cut-after---
+}experimental: {
+  renderBuiltUrl(filename, { hostId, hostType, type }) {
+    if (type === 'public') {
+      return 'https://www.domain.com/' + filename
+    } else if (path.extname(hostId) === '.js') {
+      return {
+        runtime: `window.__assetsPath(${JSON.stringify(filename)})`
+      }
+    } else {
+      return 'https://cdn.domain.com/assets/' + filename
+    }
+  },
+},
+experimental: {
+  renderBuiltUrl(filename, { hostType }) {
+    if (hostType === 'js') {
+      return { runtime: `window.__toCdnUrl(${JSON.stringify(filename)})` }
+    } else {
+      return { relative: true }
+    }
+  },
+},
